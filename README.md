@@ -28,7 +28,6 @@ I will be available after class every day and available for zoom every evening.
 - **Last Day for “W”:** Good Question
 - **Last Day of Class:** It never ends
 - **Final Exam:** Last day of class
-  Absolutely, Terry. Here's a list of **foundational course topics** that underpin just about every embedded/IoT-style project your students would do — from blinking LEDs to full-blown sensor networks. This is _not_ a syllabus, but a **concept scaffold**: the core ideas you build on again and again to make all the blinking, buzzing, sensing, and automating happen.
 
 ---
 
