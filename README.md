@@ -130,14 +130,14 @@ Lab day everyday.
 
 ## Grading
 
-| Categories                              | Weight |     | Letter Grade | Grade Range |
-| :-------------------------------------- | :----: | :-: | :----------: | :---------- |
-| ~~~Exams (3)<sup>**1**</sup>~~~ Show Up | ⇦ 40%  |     |     A ⇨      | 90-100      |
-| ~~~Programs (3)<sup>**2**</sup>~~~ Work | ⇦ 25%  |     |     B ⇨      | 80-89       |
-| ~~~Final<sup>**3**</sup>~~~ No Exams    | ⇦ 20%  |     |     C ⇨      | 70-79       |
-| Participation<sup>**1**</sup>           | ⇦ 20%  |     |     D ⇨      | 60-69       |
-| Projects<sup>**2**</sup>                | ⇦ 30%  |     |     F ⇨      | below 60    |
-| Github Portfolio<sup>**3**</sup>        | ⇦ 50%  |     |     F ⇨      | below 60    |
+| Categories                                    | Weight |     | Letter Grade | Grade Range |
+| :-------------------------------------------- | :----: | :-: | :----------: | :---------- |
+| ~~~Exams (3)~~~<sup>~~~**1**~~~</sup> Show Up | ⇦ 40%  |     |     A ⇨      | 90-100      |
+| ~~~Programs (3)<sup>**2**</sup>~~~ Work       | ⇦ 25%  |     |     B ⇨      | 80-89       |
+| ~~~Final<sup>**3**</sup>~~~ No Exams          | ⇦ 20%  |     |     C ⇨      | 70-79       |
+| Participation<sup>**1**</sup>                 | ⇦ 20%  |     |     D ⇨      | 60-69       |
+| Projects<sup>**2**</sup>                      | ⇦ 30%  |     |     F ⇨      | below 60    |
+| Github Portfolio<sup>**3**</sup>              | ⇦ 50%  |     |     F ⇨      | below 60    |
 
 #### Note<sup>1</sup> : Missing reduces your grade. This not the class you can never come but still turn in your homework, then show up for the exam and do just fine. For this class **Miss Class = Lose Points.** Sounds harsh but lab partners or teams may really need you.
 
