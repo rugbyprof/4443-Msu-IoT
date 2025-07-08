@@ -4,6 +4,6 @@
 |-----|-----|-----|-----|-----|
 | None | None | None | None | None |
 
-<sup>Last Updated: 2025-07-07 (Mon @ 10:44)</sup> 
+<sup>Last Updated: 2025-07-08 (Tue @ 12:36)</sup> 
 
 <sup>***Days Left is only accurate if the `Last Updated` date is the same as todays date. Otherwise, use the due date!***</sup> 

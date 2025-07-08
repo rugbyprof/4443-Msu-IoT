@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LED Blink Simulator</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2em;
+      }
+      .led {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: grey;
+        margin: 1em auto;
+      }
+      .on {
+        background: red;
+        box-shadow: 0 0 20px red;
+      }
+      .off {
+        background: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>HTMX LED Simulator</h1>
+
+    <label for="mode">Mode:</label>
+    <select
+      id="mode"
+      name="mode"
+      hx-get="/update"
+      hx-target="#led"
+      hx-include="[name=mode],[name=state]"
+    >
+      <option value="source">Source Mode (HIGH to turn ON)</option>
+      <option value="sink">Sink Mode (LOW to turn ON)</option>
+    </select>
+
+    <label for="state">Pin State:</label>
+    <select
+      id="state"
+      name="state"
+      hx-get="/update"
+      hx-target="#led"
+      hx-include="[name=mode],[name=state]"
+    >
+      <option value="HIGH">HIGH</option>
+      <option value="LOW">LOW</option>
+    </select>
+
+    <div id="led" class="led off"></div>
+
+    <script>
+      document.addEventListener("htmx:afterRequest", function (evt) {
+        const mode = document.getElementById("mode").value;
+        const state = document.getElementById("state").value;
+        const led = document.getElementById("led");
+
+        let isOn = false;
+        if (mode === "source") {
+          isOn = state === "HIGH";
+        } else if (mode === "sink") {
+          isOn = state === "LOW";
+        }
+
+        led.className = "led " + (isOn ? "on" : "off");
+      });
+    </script>
+  </body>
+</html>
