@@ -2,7 +2,7 @@
 
 ## Wiring with breadboard
 
-<a href="https://images2.imgbox.com/65/12/pN5P1pMs_o.gif"><img src="https://images2.imgbox.com/65/12/pN5P1pMs_o.gif" width=400></a>
+<a href="https://images2.imgbox.com/fc/8f/KC7Wtp0I_o.gif"><img src="https://images2.imgbox.com/fc/8f/KC7Wtp0I_o.gif" width=400></a>
 
 > <sub>If the gif doesn't play correctly, click on it to see original.</sub>
 
@@ -118,8 +118,8 @@ Get the sonic sensor working on a breadboard before you start soldering stuff to
 // Author: Your Friendly AI (chat gpt)
 // Platform: Arduino (Uno/Nano/Etc.)
 
-const int trigPin = 9;   // TRIG pin of HC-SR04
-const int echoPin = 10;  // ECHO pin of HC-SR04
+const int trigPin = 11;   // TRIG pin of HC-SR04
+const int echoPin = 12;  // ECHO pin of HC-SR04
 
 void setup() {
   Serial.begin(9600);          // Start serial communication
@@ -155,3 +155,44 @@ void loop() {
   delay(500);  // Wait half a second before next measurement
 }
 ```
+
+### Get Led Meter Working
+
+Once you get your program working with your sensor and you experiment with distances and its accuracy, then determine which distances will start to activate the leds. With 6 leds you could start at a distance of 100 and divide by 6: `100 / 6 = ~16` and use this as the amount as your value per led. This means green would light at 100, second green at 84, first yellow at 68, second yellow at 52, first red at 36 and second red at 20. This is just an EXAMPLE, you definitely can come up with your own thresholds.
+
+In the gif at the top each led is attached to pins 2-7. So you could add something like this to your code:
+
+```cpp
+const int green1 = 2;
+const int green2 = 3;
+.
+.
+.
+const int red2 = 7;
+
+.
+.
+.
+
+if(distance_cm < 11){
+    digitalWrite(green1, HIGH);
+    digitalWrite(green2, HIGH);
+    digitalWrite(yellow1, HIGH);
+    digitalWrite(yellow2, HIGH);
+    digitalWrite(red1, HIGH);
+    digitalWrite(red2, HIGH);
+}
+//OR
+if(distance_cm < 11){
+    for(int i=2;i<=7;i++){
+        digitalWrite(i, HIGH);
+    }
+}
+
+```
+
+Obviously I kept out a bunch of logic on turning pins on and off. Thats part of the fun for you!
+
+### Led Meter Working
+
+After your leds are acting correctly on the breadboard, then you can start to plan soldering them to the PCB. I think we will discuss this more in class, so we can share ideas.
