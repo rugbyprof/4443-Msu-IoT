@@ -1,4 +1,4 @@
-## Pcb Lab - Soldering a Sonic Led Level Meter
+# Pcb Lab - Soldering a Sonic Led Level Meter
 
 ## Wiring with breadboard
 
@@ -87,8 +87,6 @@ Why 0.034? Because **sound travels ~0.034 cm per µs**
 
 ---
 
----
-
 ### 🧪 Quick Wiring Table
 
 | Sensor Pin | Connects To (Arduino)  |
@@ -110,3 +108,50 @@ Why 0.034? Because **sound travels ~0.034 cm per µs**
 | ECHO | Output | Outputs pulse duration based on distance |
 
 ---
+
+### Working Program for Sonic Sensor
+
+Get the sonic sensor working on a breadboard before you start soldering stuff to the PCB.
+
+```cpp
+// Ultrasonic Distance Measurement with HC-SR04
+// Author: Your Friendly AI (chat gpt)
+// Platform: Arduino (Uno/Nano/Etc.)
+
+const int trigPin = 9;   // TRIG pin of HC-SR04
+const int echoPin = 10;  // ECHO pin of HC-SR04
+
+void setup() {
+  Serial.begin(9600);          // Start serial communication
+  pinMode(trigPin, OUTPUT);    // TRIG is an output
+  pinMode(echoPin, INPUT);     // ECHO is an input
+}
+
+void loop() {
+  long duration;
+  float distance_cm;
+
+  // Clear the TRIG pin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // Send a 10 microsecond pulse to TRIG
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the echo pulse duration (microseconds)
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calculate the distance (cm)
+  // Speed of sound = 343 m/s = 0.0343 cm/us
+  distance_cm = (duration * 0.0343) / 2;
+
+  // Print to Serial Monitor
+  Serial.print("Distance: ");
+  Serial.print(distance_cm);
+  Serial.println(" cm");
+
+  delay(500);  // Wait half a second before next measurement
+}
+```
