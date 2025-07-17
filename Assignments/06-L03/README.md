@@ -2,13 +2,15 @@
 
 ## Wiring with breadboard
 
-<img src="https://images2.imgbox.com/65/12/pN5P1pMs_o.gif" width=400>
+<a href="https://images2.imgbox.com/65/12/pN5P1pMs_o.gif"><img src="https://images2.imgbox.com/65/12/pN5P1pMs_o.gif" width=400></a>
+
+> <sub>If the gif doesn't play correctly, click on it to see original.</sub>
 
 ## Ultrasonic Distance Sensor
 
 ### 🦇 What It Is
 
-> "Imagine yelling in a canyon. The longer it takes to hear your echo, the farther away the wall is. This sensor does the same thing, but in bat-squeak mode."
+"Imagine yelling in a canyon. The longer it takes to hear your echo, the farther away the wall is. This sensor does the same thing, but in bat-squeak mode."
 
 The **HC-SR04** is an **ultrasonic distance sensor** that works like echolocation:
 
@@ -84,7 +86,6 @@ Why 0.034? Because **sound travels ~0.034 cm per µs**
 | Cone width | ~15°               |
 
 ---
-
 
 ---
 
