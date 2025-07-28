@@ -1,0 +1,13 @@
+Component,Example,Purpose,Qty
+Microcontroller,ESP32 DevKit v1,Main game logic,1
+LCD Screen,"0.96"" I2C OLED (SSD1306)",Display text and countdown,1
+Push Buttons,Momentary push button (12mm),Player input,2
+LEDs,5mm Red/Green LEDs,Countdown and win indication,4
+Resistors,"220Ω for LEDs, 10kΩ for buttons","LED current limiting, pull-downs",10
+Capacitors,0.1uF and 10uF,Debouncing and power smoothing,6
+Transistors,2N3904 (NPN),Drive LEDs or buzzer,2
+Diodes,1N4148,Protect GPIOs,4
+Buzzer,Active piezo buzzer,Sound for win/loss,1
+Keypad (Optional),4x4 Matrix Keypad,Menu interaction or difficulty,1
+Breadboard / PCB,Custom PCB preferred,Mount components,1
+Jumper Wires / Headers,Male/female jumper wires,Connections,20
