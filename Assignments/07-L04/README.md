@@ -6,23 +6,23 @@ Welcome to the Microcontroller Game Project Pack! Each game is self-contained an
 
 ## 📁 Game Index
 
-### 1. [Catch the Dot](./Catch_the_Dot/)
+### 1. [Catch the Dot](./Games/Catch_the_Dot/)
 
 A fast-paced reflex game where a dot falls from the top of the OLED screen. Move the paddle (via potentiometer or tilt sensor) to catch it before it hits the ground. Miss it — game over.
 
-### 2. [Dice Duel](./Dice_Dual/)
+### 2. [Dice Duel](./Games/Dice_Dual/)
 
 Two-player reaction game. Wait for the “GO!” signal and be the first to press your button. The winner rolls a digital die — highest number scores. First to 5 (or 21) wins.
 
-### 3. [Reaction Game](./Reaction_Game/)
+### 3. [Reaction Game](./Games/Reaction_Game/)
 
 Head-to-head reflex showdown! A central LED or buzzer signals when to press. React too early and you lose the round. Fully customizable timing and scoring system.
 
-### 4. [Simon Says Clone](./Simon_Says_Clone/)
+### 4. [Simon Says Clone](./Games/Simon_Says_Clone/)
 
 Repeat an ever-growing sequence of lights and tones. Uses four colored buttons and LEDs, each with a unique tone. Includes OLED-based difficulty selection and score display.
 
-### 5. [Snake](./Snake/)
+### 5. [Snake](./Games/Snake/)
 
 Classic Snake game adapted for a 0.96" OLED display. Control the snake using two buttons (left/right turns), eat the food, and grow — but don’t hit yourself!
 
