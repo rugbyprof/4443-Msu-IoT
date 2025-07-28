@@ -1,8 +1,3 @@
-Absolutely — here’s a clean, student-friendly `README.md` you can drop at the root of your project folder. It includes clickable links (assuming GitHub or web hosting), short descriptions, and consistent formatting:
-
----
-
-```markdown
 # 🎮 IoT Lab Game Projects
 
 Welcome to the Microcontroller Game Project Pack! Each game is self-contained and designed for ESP32 or Arduino boards using LEDs, buttons, buzzers, and optionally, OLED displays.
@@ -65,4 +60,3 @@ Each folder contains:
 
 Feel free to clone, fork, and improve these projects.  
 Let the games begin! 🕹️
-```
