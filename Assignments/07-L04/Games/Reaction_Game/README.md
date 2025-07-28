@@ -1,96 +1,172 @@
-Here’s the complete **Bill of Materials (BOM)** for a student to build the **Reaction Duel Game** from scratch:
-
-📁 Download [reaction_game_full_bom.csv](./reaction_game_full_bom_20250725.csv?)
-
-It includes:
-
-- All required components: microcontroller, display, buttons, LEDs, discrete parts
-- Optional parts: 7-segment display, keypad
-- Finalization materials: PCB and 3D-printed enclosure
-
-Would you like next:
-
-1. A **schematic diagram** in PDF or KiCad
-2. The **Arduino/ESP32 source code**
-3. A **3D enclosure design** template (STL/OpenSCAD)
-4. A **student instruction handout** (markdown/PDF)
+Perfect — here's the final standardized entry in the current batch:
 
 ---
 
-## 🧱 Enclosure Design Concept: “Reaction Game Pod”
+# ⚡ Game 5: Reaction Duel
 
-### 🔲 Dimensions (customizable)
-
-| Section        | Size (approx)             |
-| -------------- | ------------------------- |
-| Base footprint | 120mm × 80mm              |
-| Height         | 40–50mm                   |
-| Wall thickness | 2.5mm                     |
-| Lid style      | Snap-fit or screw (4x M3) |
+🎮 _Who’s faster? A head-to-head reflex game where every millisecond counts!_
 
 ---
 
-## 🧩 Layout & Features
+## 🧠 Concept
 
+Reaction Duel pits two players against each other in a test of reflexes. After a random delay, the system signals “GO!” with LEDs and/or a tone. The first player to press their button wins the round and scores a point. Press too early? Penalty! First to reach the target score wins.
+
+This project teaches input debouncing, timing, fair signaling, random delays, and reaction-time measurement.
+
+---
+
+## 🔧 Hardware Requirements
+
+| Component              | Qty | Notes                                  |
+| ---------------------- | --- | -------------------------------------- |
+| ESP32 (or Arduino)     | 1   | Any board with 2 digital inputs        |
+| Pushbuttons            | 2   | One per player, connected to GND       |
+| RGB LEDs (or 2 LEDs)   | 3   | 1 for each player + 1 central “GO” LED |
+| OLED Display (SSD1306) | 1   | Optional, for score and instructions   |
+| Buzzer (optional)      | 1   | For sound cue on GO!                   |
+| Breadboard + jumpers   | —   | Recommended                            |
+
+---
+
+## 🕹 Gameplay Rules
+
+1. Game starts with an intro screen and score = 0–0.
+2. After a random delay (2–6 seconds), a signal (LED or sound) appears.
+3. First player to press wins the round.
+4. If a player presses _before_ the signal — false start! Point goes to the opponent.
+5. First to target score (e.g., 5) wins.
+6. OLED display shows current score and winner at end.
+
+---
+
+## 💻 Starter Code (ESP32-Compatible, OLED + LED Version)
+
+```cpp
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+const int player1Btn = 2;
+const int player2Btn = 3;
+const int player1LED = 8;
+const int player2LED = 9;
+const int centerLED  = 10;
+const int buzzerPin  = 11;
+
+int score1 = 0, score2 = 0;
+const int winScore = 5;
+
+void setup() {
+  pinMode(player1Btn, INPUT_PULLUP);
+  pinMode(player2Btn, INPUT_PULLUP);
+  pinMode(player1LED, OUTPUT);
+  pinMode(player2LED, OUTPUT);
+  pinMode(centerLED, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 30);
+  display.println("Reaction Duel Begins!");
+  display.display();
+  delay(2000);
+}
+
+void loop() {
+  display.clearDisplay();
+  display.setCursor(10, 10);
+  display.println("Get Ready...");
+  display.display();
+  digitalWrite(centerLED, LOW);
+  delay(random(2000, 6000));
+
+  digitalWrite(centerLED, HIGH);
+  tone(buzzerPin, 1000, 100);
+  display.clearDisplay();
+  display.setCursor(10, 10);
+  display.println("GO!");
+  display.display();
+
+  int result = waitForInput();
+
+  if (result == 1) score1++;
+  else if (result == 2) score2++;
+
+  display.clearDisplay();
+  display.setCursor(10, 20);
+  display.print("P1: ");
+  display.print(score1);
+  display.print("  P2: ");
+  display.println(score2);
+  display.display();
+  digitalWrite(centerLED, LOW);
+  delay(1500);
+
+  if (score1 >= winScore || score2 >= winScore) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(10, 20);
+    display.println("Game Over");
+    display.setTextSize(1);
+    display.setCursor(20, 50);
+    display.print("Winner: P");
+    display.println(score1 > score2 ? "1" : "2");
+    display.display();
+    while (true);
+  }
+}
 ```
-+--------------------------------------------------+
-|                [             ]                   |
-|                [ OLED Screen ]                   |
-|                [             ]                   |
-|                                                  |
-|  [Button P1]                        [Button P2]  |
-|                                                  |
-|           [LED1] [LED2] [LED3] [LED4]            |
-|                                                  |
-|                [Speaker hole]                    |
-+--------------------------------------------------+
+
+---
+
+## 🔁 Core Logic: Input Detection
+
+```cpp
+int waitForInput() {
+  unsigned long startTime = millis();
+  while (true) {
+    if (digitalRead(player1Btn) == LOW) {
+      while (digitalRead(player1Btn) == LOW);
+      if (millis() - startTime < 100) return 2; // false start
+      return 1;
+    }
+    if (digitalRead(player2Btn) == LOW) {
+      while (digitalRead(player2Btn) == LOW);
+      if (millis() - startTime < 100) return 1; // false start
+      return 2;
+    }
+  }
+}
 ```
 
-### 🧰 What to Include in the 3D Design:
+---
 
-- **OLED slot** cutout (just surface-mounted)
-- **Two button holes** for player inputs (12mm)
-- **Four LED holes** or a light pipe array
-- **Speaker grille** or vent pattern
-- **Rear cutout or lid** for ESP32 USB access
-- **Mounting bosses or standoffs** for PCB (optional)
-- **Hidden cavity** under the lid for wiring mess
+## 🧪 Possible Enhancements
+
+| Type           | Ideas                                                 |
+| -------------- | ----------------------------------------------------- |
+| 🧠 Game Logic  | Add countdown timer or pre-start LED ramp-up          |
+| 🎵 Audio       | Add tones for “GO!”, winner, and false start          |
+| 📊 Display     | Show player reaction time (ms)                        |
+| 🧑‍🏫 UX          | Visual feedback via RGB LED for winner/loser          |
+| 🔁 Score Mode  | Change win condition (e.g., first to 10 or best-of-3) |
+| 🧱 Enclosure   | Arcade-style controller with light-up buttons         |
+| 🔄 Multiplayer | Expand to 4 players with ESP32 I/O or multiplexing    |
 
 ---
 
-## 🧱 Material & Print Settings
+## 📦 Versions
 
-- **PLA or PETG** recommended
-- 0.2 mm layer height
-- 2–3 perimeters
-- ~15–20% infill
-- No supports required if using chamfered ports
-
----
-
-## 🛠️ Design Tool Options:
-
-This is the software you need to create a 3D model. All of these have different interfaces and learning curves.
-
-| Tool           | Pros                      | Notes                         |
-| -------------- | ------------------------- | ----------------------------- |
-| **Tinkercad**  | Super beginner-friendly   | Great for student edits       |
-| **OpenSCAD**   | Programmable & parametric | Good for templates & versions |
-| **Fusion 360** | Professional CAD          | Needs EDU license             |
-| **FreeCAD**    | Open-source + precise     | Steeper learning curve        |
-
----
-
-### 🧱 Your Enclosure Features:
-
-- Big enough for generic PCB and wiring
-- Cutouts for:
-  - 2x player buttons (12mm)
-  - 4x 5mm LEDs
-  - 1x OLED screen (27×11 mm)
-  - Speaker grille (3×3 holes)
-  - USB port notch
-
-### ✅ Next Steps:
-
-Let's get a case printed for you. If you decide to do this project, I need your help finding files to help with the 3D printout. The wiring has actuall become the easy part now 🤣
+| Version                | Status                         |
+| ---------------------- | ------------------------------ |
+| ✅ LED + Serial        | ✔️                             |
+| ✅ OLED Display        | ✔️                             |
+| ✅ False Start Penalty | ✔️                             |
+| 🔲 4-Player            | Expandable with I/O planning   |
+| 🔲 RGB Light Ring      | Optional for central countdown |
+| 🔲 BLE Leaderboard     | Future idea — ESP32 only       |

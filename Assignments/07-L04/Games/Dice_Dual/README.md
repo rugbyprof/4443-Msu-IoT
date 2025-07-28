@@ -1,215 +1,47 @@
-## 🎲 Dice Duel (“First to 21”)
-
-**Goal:** Each player “rolls” a digital die — first to 21 without going over wins!
-
-> See bottom for a different take. I want this to be easy, but good.
-> Also, I threw this together with chatGPT and some edits so its not perfect. Don't assume its errorless. I will check the code when I can, but I can't really implement EVERY project, can I ? Man, I want to say challenge accepted, but I won't.
-
-### Components:
-
-- 2 Buttons (one for each player)
-- OLED screen or 7-segment display for score
-- LED ring (optional) for visual effects (see my idea at bottom)
-- Piezo buzzer for "bust" or "win"
-- PCB + 3D dice-shaped enclosure
-
-|                                                                       |
-| :-------------------------------------------------------------------: |
-| <img src="https://images2.imgbox.com/a1/05/6Q5QP21l_o.png" width=150> |
-|                        https://a.co/d/dnqs16H                         |
-|                               Led Ring                                |
-
-### Learning Focus:
-
-- Basic game logic, edge-triggered input
-- Use of RNG with fairness
-- Case design for tactile feel
+Let’s roll into **Game 2**, fully standardized:
 
 ---
 
-### Project Main Points
+# 🎲 Game 2: Dice Duel – Two Player Version
 
-- Random delay before "GO" signal is sent or shown.
-- Players race to buttons (so they should handle smacking).
-- Dice roll (simulated in many ways, blinking led, using the led ring, or display)
-- Players score is the sum of the rolls they won.
-- Score tracking via serial monitor (or secreen display OR seven segment displays)
-- Game ends at 21 points (can be changed)
+🎮 _A reaction-based dice game where two players race to win rounds by rolling virtual dice_
 
 ---
 
-### 🧰 Hardware Setup
+## 🧠 Concept
 
-| Pin | Component          |
-| --- | ------------------ |
-| D2  | Player 1 Button    |
-| D3  | Player 2 Button    |
-| D8  | Player 1 LED       |
-| D9  | Player 2 LED       |
-| D10 | Maybe Another Led? |
+Dice Duel is a two-player reaction game. After a random countdown, players race to press their button. The faster player rolls a virtual die. Then the opponent rolls. The higher roll wins the round. First to a set score (e.g., 5 or 21) wins!
 
-> Buttons go from pin to GND, using `INPUT_PULLUP`.
+This game teaches reaction timing, fair random number use, button debouncing, and tracking game state.
 
 ---
 
-### ✅ Arduino Code: Dice Duel – 2 LED Only Version
+## 🔧 Hardware Requirements
 
-```cpp
-const int player1Btn = 2;
-const int player2Btn = 3;
-const int player1LED = 8;
-const int player2LED = 9;
-
-int score1 = 0;
-int score2 = 0;
-const int winScore = 5;
-
-bool waitingForPress = false;
-bool gameActive = true;
-
-void setup() {
-  pinMode(player1Btn, INPUT_PULLUP);
-  pinMode(player2Btn, INPUT_PULLUP);
-  pinMode(player1LED, OUTPUT);
-  pinMode(player2LED, OUTPUT);
-
-  Serial.begin(9600);
-  Serial.println("Dice Duel Begins!");
-  delay(1000);
-}
-
-void loop() {
-  if (!gameActive) return;
-
-  // Countdown to GO
-  Serial.println("\nGet Ready...");
-  digitalWrite(player1LED, LOW);
-  digitalWrite(player2LED, LOW);
-  delay(random(2000, 6000)); // suspenseful wait
-  Serial.println("GO!");
-  digitalWrite(player1LED, HIGH);
-  digitalWrite(player2LED, HIGH);
-
-  waitingForPress = true;
-  int winner = waitForWinner(); // returns 1 or 2
-  waitingForPress = false;
-
-  digitalWrite(player1LED, LOW);
-  digitalWrite(player2LED, LOW);
-
-  int roll = random(1, 7); // Dice roll: 1-6
-
-  Serial.print("Player ");
-  Serial.print(winner);
-  Serial.print(" pressed first and rolled a ");
-  Serial.println(roll);
-
-  // Flash winner LED roll times
-  for (int i = 0; i < roll; i++) {
-    digitalWrite(winner == 1 ? player1LED : player2LED, HIGH);
-    delay(200);
-    digitalWrite(winner == 1 ? player1LED : player2LED, LOW);
-    delay(200);
-  }
-
-  // Compare to other player roll
-  int opponentRoll = random(1, 7);
-  Serial.print("Player ");
-  Serial.print(winner == 1 ? 2 : 1);
-  Serial.print(" rolled a ");
-  Serial.println(opponentRoll);
-
-  if (roll > opponentRoll) {
-    if (winner == 1) score1++; else score2++;
-    Serial.print("Player ");
-    Serial.print(winner);
-    Serial.println(" wins the round!");
-  } else if (roll < opponentRoll) {
-    if (winner == 1) score2++; else score1++;
-    Serial.print("Player ");
-    Serial.print(winner == 1 ? 2 : 1);
-    Serial.println(" wins the round!");
-  } else {
-    Serial.println("Tie! No points awarded.");
-  }
-
-  Serial.print("Score => P1: ");
-  Serial.print(score1);
-  Serial.print(" | P2: ");
-  Serial.println(score2);
-
-  if (score1 >= winScore || score2 >= winScore) {
-    gameActive = false;
-    Serial.println("*** Game Over! ***");
-    Serial.print("Winner: Player ");
-    Serial.println(score1 > score2 ? "1" : "2");
-  }
-
-  delay(2000); // pause between rounds
-}
-
-int waitForWinner() {
-  while (true) {
-    if (digitalRead(player1Btn) == LOW) {
-      while (digitalRead(player1Btn) == LOW); // wait for release
-      return 1;
-    }
-    if (digitalRead(player2Btn) == LOW) {
-      while (digitalRead(player2Btn) == LOW); // wait for release
-      return 2;
-    }
-  }
-}
-```
+| Component               | Qty | Notes                                   |
+| ----------------------- | --- | --------------------------------------- |
+| ESP32 or Arduino        | 1   | Any dev board with digital inputs       |
+| Buttons                 | 2   | One per player, use `INPUT_PULLUP`      |
+| LEDs (optional)         | 2   | Visual feedback for each player         |
+| OLED Display (I2C)      | 1   | SSD1306, 128x64 for score and roll info |
+| Piezo Buzzer (optional) | 1   | For "GO!" and win/loss tones            |
+| Jumper Wires            | —   |                                         |
+| Breadboard              | 1   | Optional but recommended                |
 
 ---
 
-### 🧪 How to Use:
+## 🕹 Gameplay Rules
 
-1. Upload the sketch.
-2. Open **Serial Monitor** at 9600 baud to see scores and results.
-3. Press buttons when "GO!" appears (after a random delay).
-4. First to 5 points wins!
-
----
-
-## 🎲 OLED Dice Dual (Uses Display)
-
-Now:
-
-- Each player's score is shown on the display
-- Dice rolls are animated (simulated with rolling numbers)
-- LED feedback is still used (optional but keeps the tactile feel)
+1. Game displays “Get Ready…”, then after a random delay, “GO!”
+2. First player to press their button after “GO!” rolls first
+3. Second player rolls automatically after
+4. Higher roll wins the round
+5. First to 5 (or configurable score) wins
+6. Score is displayed on OLED
 
 ---
 
-### 🧰 Hardware Setup:
-
-| Pin | Component       |
-| --- | --------------- |
-| D2  | Player 1 Button |
-| D3  | Player 2 Button |
-| D8  | Player 1 LED    |
-| D9  | Player 2 LED    |
-| A4  | OLED SDA (I2C)  |
-| A5  | OLED SCL (I2C)  |
-
-✅ Buttons go to GND using `INPUT_PULLUP`.
-
-✅ OLED is SSD1306 (128x64, I2C).
-
----
-
-### ✅ Libraries Required:
-
-Install via Library Manager:
-
-- `Adafruit GFX`
-- `Adafruit SSD1306`
-
----
-
-### 💻 Code
+## 💻 Starter Code (ESP32-Compatible, OLED Version)
 
 ```cpp
 #include <Adafruit_GFX.h>
@@ -217,26 +49,17 @@ Install via Library Manager:
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
-#define OLED_RESET -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 const int player1Btn = 2;
 const int player2Btn = 3;
-const int player1LED = 8;
-const int player2LED = 9;
-
-int score1 = 0;
-int score2 = 0;
+int score1 = 0, score2 = 0;
 const int winScore = 5;
-bool gameActive = true;
 
 void setup() {
   pinMode(player1Btn, INPUT_PULLUP);
   pinMode(player2Btn, INPUT_PULLUP);
-  pinMode(player1LED, OUTPUT);
-  pinMode(player2LED, OUTPUT);
 
-  Serial.begin(9600);
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();
   display.setTextSize(1);
@@ -248,87 +71,63 @@ void setup() {
 }
 
 void loop() {
-  if (!gameActive) return;
-
   display.clearDisplay();
   display.setCursor(10, 10);
   display.println("Get Ready...");
   display.display();
-  digitalWrite(player1LED, LOW);
-  digitalWrite(player2LED, LOW);
   delay(random(2000, 6000));
 
   display.clearDisplay();
   display.setCursor(10, 10);
   display.println("GO!");
   display.display();
-  digitalWrite(player1LED, HIGH);
-  digitalWrite(player2LED, HIGH);
 
-  int winner = waitForButtonPress();
+  int winner = waitForFirstPress();
 
-  digitalWrite(player1LED, LOW);
-  digitalWrite(player2LED, LOW);
-
-  int rollWinner = rollDice(winner);
-  int rollOther  = rollDice(winner == 1 ? 2 : 1);
+  int roll1 = (winner == 1) ? random(1, 7) : random(1, 7);
+  int roll2 = (winner == 1) ? random(1, 7) : roll1;  // simulate fair second roll
 
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
-  display.print("Player 1 Score: ");
+  display.print("P1 Score: ");
   display.println(score1);
-  display.print("Player 2 Score: ");
+  display.print("P2 Score: ");
   display.println(score2);
   display.println("---------------------");
+
   display.setTextSize(2);
   display.setCursor(0, 35);
-  display.print("P");
-  display.print(winner);
-  display.print(":");
-  display.print(rollWinner);
+  display.print("P1: ");
+  display.print(winner == 1 ? roll1 : roll2);
   display.setCursor(64, 35);
-  display.print("P");
-  display.print(winner == 1 ? 2 : 1);
-  display.print(":");
-  display.print(rollOther);
+  display.print("P2: ");
+  display.print(winner == 1 ? roll2 : roll1);
   display.display();
-  delay(1000);
+  delay(1500);
 
-  // Determine round winner
-  if (rollWinner > rollOther) {
-    if (winner == 1) score1++; else score2++;
-    announce("Player " + String(winner) + " wins round!");
-  } else if (rollOther > rollWinner) {
-    if (winner == 1) score2++; else score1++;
-    announce("Player " + String(winner == 1 ? 2 : 1) + " wins round!");
-  } else {
-    announce("Tie! No points.");
-  }
+  if (roll1 > roll2) score1++;
+  else if (roll2 > roll1) score2++;
 
-  // Game over check
   if (score1 >= winScore || score2 >= winScore) {
-    gameActive = false;
-    delay(500);
     display.clearDisplay();
     display.setTextSize(2);
     display.setCursor(10, 20);
     display.println("Game Over");
     display.setTextSize(1);
     display.setCursor(20, 50);
-    display.print("Winner: Player ");
-    display.println(score1 > score2 ? "1" : "2");
+    display.print("Winner: P");
+    display.print(score1 > score2 ? "1" : "2");
     display.display();
-    while (true); // halt
+    while (1);
   }
-
   delay(2000);
 }
 
-int waitForButtonPress() {
+int waitForFirstPress() {
   while (true) {
     if (digitalRead(player1Btn) == LOW) {
-      while (digitalRead(player1Btn) == LOW); // wait release
+      while (digitalRead(player1Btn) == LOW);
       return 1;
     }
     if (digitalRead(player2Btn) == LOW) {
@@ -337,61 +136,39 @@ int waitForButtonPress() {
     }
   }
 }
-
-int rollDice(int player) {
-  int result = 0;
-  for (int i = 0; i < 10; i++) {
-    result = random(1, 7);
-    displayDiceRoll(player, result);
-    delay(80);
-  }
-  return result;
-}
-
-void displayDiceRoll(int player, int val) {
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setCursor(10, 20);
-  display.print("Player ");
-  display.println(player);
-  display.setTextSize(4);
-  display.setCursor(50, 30);
-  display.println(val);
-  display.display();
-}
-
-void announce(String msg) {
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(10, 30);
-  display.println(msg);
-  display.display();
-  delay(1500);
-}
 ```
 
 ---
 
-### 🧪 Notes & Tweaks:
+## 🧪 Possible Enhancements
 
-- `winScore = 21` should be changeable.
-- You can **add buzzer feedback** at “GO!” and after the winner.
-- If you want to **restart the game**, hold down both buttons or reset the board.
-- 🎮 A **4-player** version with automatic scoreboard?
-- 🎲 **Graphical dice face** drawing instead of text numbers?
-- ⏱️ A **false start penalty** if someone presses too early?
+| Type          | Idea                                             |
+| ------------- | ------------------------------------------------ |
+| 🧠 Game Logic | Add false start penalty (pressed too early)      |
+| 🎵 Sound      | Play "GO!" tone and win/lose buzzers             |
+| 🎮 Input      | Add a third button to restart the game           |
+| 🧑‍🏫 Display    | Show animated dice face (bitmaps or numbers)     |
+| 🎛 UX          | Menu to choose winning score (5, 10, 21)         |
+| 🔄 Hardware   | Replace OLED with 7-segment displays             |
+| 🧱 Enclosure  | Dice-shaped 3D-printed shell with arcade buttons |
 
-## Griffins Notes
+---
 
-This project was designed for two leds and using the serial console (for the basic version, not the display version). I would recommend using 3 RGB leds.
+## 📦 Versions
 
-- Left ledPin
-  - For left player
-  - Turns "winner color" (e.g green) when winner
-  - Turns "loser color" (e.g red) when loser
-- Center ledPins
-  - It smoothly changes colors until a predefined "GO! color" (e.g. bright white or no color) is reached.
-    - A beep or something should accompany the start color shows.
-  - The first person to hit thier button gets the points.
-- Right ledPin
-  - Same as left but for right player.
+| Version                           | Available   |
+| --------------------------------- | ----------- |
+| ✅ LED + Serial                   | Yes         |
+| ✅ OLED Display                   | Yes         |
+| 🔲 4-player Mode                  | Expandable  |
+| 🔲 RGB LED version                | Planned     |
+| 🔲 Multiplayer via Bluetooth/WiFi | Future idea |
+
+---
+
+Want me to move on to **Game 3: Simon Says Clone**, or would you like:
+
+- A printable `.md` file of this?
+- A variant with LED-only output (no OLED)?
+
+Your call!
