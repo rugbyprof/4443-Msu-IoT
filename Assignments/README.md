@@ -10,6 +10,6 @@
 | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/06-L03">06-L03</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/06-L03"> Pcb Lab </a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/06-L03"> Soldering a Sonic Led Level Meter</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/06-L03">None</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/06-L03"> Wiring with breadboard</a>*** |  |
 | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/07-L04">07-L04</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/07-L04">None</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/07-L04">None</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/07-L04">None</a>*** | ***<a href="https://github.com/rugbyprof/4443-Msu-IoT/tree/master/Assignments/07-L04">N/A</a>*** |  |
 
-<sup>Last Updated: 2025-07-28 (Mon @ 04:25)</sup> 
+<sup>Last Updated: 2025-07-30 (Wed @ 12:03)</sup> 
 
 <sup>***Days Left is only accurate if the `Last Updated` date is the same as todays date. Otherwise, use the due date!***</sup> 
